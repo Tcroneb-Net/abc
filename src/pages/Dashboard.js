@@ -4,7 +4,6 @@ import { getTrending, getTopRatedMovies } from '../utils/api';
 import useFetch from '../hooks/useFetch';
 import MediaCard from '../components/MediaCard';
 import MediaRow from '../components/MediaRow';
-import { getPoster } from '../utils/api';
 import './Dashboard.css';
 
 const STATS = [
@@ -15,7 +14,7 @@ const STATS = [
 ];
 
 export default function Dashboard() {
-  const { favorites, language, toggleFavorite, isFavorite } = useApp();
+  const { favorites, language } = useApp();
 
   const { data: trending, loading: trendingLoading } = useFetch(
     () => getTrending('movie', 'week', language), [language]
