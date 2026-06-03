@@ -7,6 +7,8 @@ const useInfiniteScroll = (fetchFn, language) => {
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
   const observer = useRef();
+  const fetchFnRef = useRef(fetchFn);
+  fetchFnRef.current = fetchFn;
 
   useEffect(() => {
     setItems([]);
@@ -17,7 +19,7 @@ const useInfiniteScroll = (fetchFn, language) => {
   useEffect(() => {
     if (!hasMore) return;
     setLoading(true);
-    fetchFn(page, language)
+    fetchFnRef.current(page, language)
       .then((res) => {
         const results = res.data.results || [];
         setItems((prev) => (page === 1 ? results : [...prev, ...results]));
@@ -28,7 +30,7 @@ const useInfiniteScroll = (fetchFn, language) => {
         setError(err.message);
         setLoading(false);
       });
-  }, [page, language]);
+  }, [page, language, hasMore]);
 
   const lastItemRef = useCallback(
     (node) => {

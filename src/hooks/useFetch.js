@@ -5,13 +5,15 @@ const useFetch = (fetchFn, deps = []) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const cancelRef = useRef(false);
+  const fetchFnRef = useRef(fetchFn);
+  fetchFnRef.current = fetchFn;
 
   useEffect(() => {
     cancelRef.current = false;
     setLoading(true);
     setError(null);
 
-    fetchFn()
+    fetchFnRef.current()
       .then((res) => {
         if (!cancelRef.current) {
           setData(res.data);
@@ -28,6 +30,7 @@ const useFetch = (fetchFn, deps = []) => {
     return () => {
       cancelRef.current = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   return { data, loading, error };
